@@ -371,7 +371,7 @@ export default function Home() {
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Is my data secure?</h3>
                 <p className="text-gray-600">
-                  Bank-level encryption (AES-256), SOC 2 compliant infrastructure, and zero data sharing with competitors. 
+                  Bank-level encryption (AES-256), secure cloud infrastructure, and zero data sharing with competitors. 
                   Your customer information and calculations remain completely private and secure.
                 </p>
               </div>
