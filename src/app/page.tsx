@@ -322,23 +322,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Testimonial/Social Proof */}
-          <div className="bg-blue-50 p-6 rounded-lg mb-12">
-            <div className="flex items-center mb-4">
-              <div className="flex-shrink-0">
-                <div className="h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">JM</span>
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-900">Jake Martinez</p>
-                <p className="text-sm text-gray-500">HVAC Contractor, Phoenix</p>
-              </div>
-            </div>
-            <blockquote className="text-gray-700 italic">
-              "Early access limited - first 10 HVAC contractors get 6 months free."
-            </blockquote>
-          </div>
 
           {/* Social Proof Section */}
           <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 px-4">
