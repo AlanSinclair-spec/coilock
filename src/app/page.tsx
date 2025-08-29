@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-// Add this to show scarcity
-const TOTAL_BETA_SPOTS = 20;
-const SPOTS_TAKEN = 6; // Update this manually as you get users
-const SPOTS_REMAINING = TOTAL_BETA_SPOTS - SPOTS_TAKEN;
+// Honest founding member messaging
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -118,7 +115,7 @@ export default function Home() {
             Professional CO Compliance System - 70% Less Than ServiceTitan
           </p>
           <p className="text-base sm:text-lg text-blue-600 font-semibold mb-6 sm:mb-8 px-4">
-            Now accepting beta users - Founding members lock in 50% off forever
+            Early Access Now Available - Founding Member Pricing
           </p>
 
           {/* Credibility markers */}
@@ -316,8 +313,8 @@ export default function Home() {
                 </div>
               )}
               
-              <div className="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-red-100 text-red-800 mb-4">
-                ⚡ Only {SPOTS_REMAINING} founding member spots remaining
+              <div className="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">
+                🚀 Now Accepting Founding Members
               </div>
               <div className="text-sm text-blue-600 font-medium">
                 Avoid $2,847 callbacks - Join the contractors already saving thousands
