@@ -347,7 +347,7 @@ export default function Home() {
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How does this save me money?</h3>
                 <p className="text-gray-600">
-                  Eliminates costly callbacks from CO interference issues that can cost $500-2000 per incident. 
+                  Eliminates costly callbacks from CO interference issues that can cost $2,847 per callback. 
                   Prevents oversized equipment purchases and reduces installation time significantly with accurate calculations.
                 </p>
               </div>
@@ -356,7 +356,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How accurate are the calculations?</h3>
                 <p className="text-gray-600">
                   Built according to ACCA Manual J standards. 
-                  Accounts for CO interference patterns, local climate data, and equipment specifications automatically.
+                  Accounts for CO interference patterns and equipment specifications.
                 </p>
               </div>
               
@@ -364,7 +364,7 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Why is this better than manual calculations?</h3>
                 <p className="text-gray-600">
                   Manual calculations take 45+ minutes and often miss critical CO interference factors. 
-                  Our automated system completes calculations in 2 minutes with built-in CO detection algorithms.
+                  Our system helps identify potential CO interference issues during the planning phase.
                 </p>
               </div>
               
@@ -378,17 +378,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Free Tracker CTA */}
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 mb-4">Want to try our load calculator first?</p>
-            <a 
-              href="/tracker" 
-              className="inline-block bg-gray-100 text-gray-800 px-6 py-3 rounded-md font-medium hover:bg-gray-200 hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
-              onClick={() => trackEvent('cta_click', { location: 'footer', button_text: 'try_free_calculator' })}
-            >
-              Try Free HVAC Calculator
-            </a>
-          </div>
 
           {/* Trust Signal */}
           <div className="mt-8 text-center">
@@ -416,14 +405,14 @@ export default function Home() {
             <div>
               <h4 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">Contact</h4>
               <div className="space-y-2">
+                <p className="text-gray-600">Questions? Email:</p>
                 <a 
                   href="mailto:hello@coilock.com" 
-                  className="block text-gray-600 hover:text-blue-600 transition-colors"
+                  className="block text-blue-600 hover:text-blue-700 transition-colors font-medium"
                   onClick={() => trackEvent('contact_click', { method: 'email' })}
                 >
                   hello@coilock.com
                 </a>
-                <p className="text-sm text-gray-500">Support & Sales</p>
               </div>
             </div>
 

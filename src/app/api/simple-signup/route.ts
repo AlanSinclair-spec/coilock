@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-// Simple in-memory storage for demo (replace with database in production)
-// Cleared test entries - starting fresh
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+// Fallback in-memory storage if Supabase fails
 const signups: Array<{
   id: string;
   name: string;
@@ -48,43 +53,74 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if email already exists
-    const existingSignup = signups.find(signup => signup.email.toLowerCase() === email.toLowerCase());
-    if (existingSignup) {
-      return NextResponse.json(
-        { error: 'This email is already registered for early access' },
-        { status: 409 }
-      );
-    }
+    // Try to save to Supabase first
+    try {
+      const { data, error } = await supabase
+        .from('early_access_signups')
+        .insert([{
+          name: name.trim(),
+          company_name: company_name.trim(),
+          email: email.toLowerCase(),
+          phone: phone?.trim() || null,
+          monthly_installs: monthly_installs || null,
+          ab_test_version: ab_test_version || 'B'
+        }])
+        .select()
+        .single();
 
-    // Create new signup
-    const newSignup = {
-      id: `signup_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      name: name.trim(),
-      company_name: company_name.trim(),
-      email: email.toLowerCase(),
-      phone: phone?.trim() || undefined,
-      monthly_installs: monthly_installs || undefined,
-      ab_test_version: ab_test_version || 'B',
-      created_at: new Date().toISOString()
-    };
-
-    // Store signup
-    signups.push(newSignup);
-
-    // Log for debugging
-    console.log('New signup:', newSignup);
-    console.log('Total signups:', signups.length);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Welcome aboard! You\'ve locked in founding member pricing. Check your email for next steps.',
-      data: {
-        id: newSignup.id,
-        email: newSignup.email,
-        name: newSignup.name
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
-    });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Welcome aboard! You\'ve locked in founding member pricing. Check your email for next steps.',
+        data: {
+          id: data.id,
+          email: data.email,
+          name: data.name
+        }
+      });
+
+    } catch (supabaseError) {
+      console.error('Supabase failed, using fallback storage:', supabaseError);
+      
+      // Fallback to in-memory storage
+      const existingSignup = signups.find(signup => 
+        signup.email.toLowerCase() === email.toLowerCase()
+      );
+      
+      if (existingSignup) {
+        return NextResponse.json(
+          { error: 'This email is already registered for early access' },
+          { status: 409 }
+        );
+      }
+
+      const newSignup = {
+        id: `signup_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        name: name.trim(),
+        company_name: company_name.trim(),
+        email: email.toLowerCase(),
+        phone: phone?.trim() || undefined,
+        monthly_installs: monthly_installs || undefined,
+        ab_test_version: ab_test_version || 'B',
+        created_at: new Date().toISOString()
+      };
+
+      signups.push(newSignup);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Welcome aboard! You\'ve locked in founding member pricing. Check your email for next steps.',
+        data: {
+          id: newSignup.id,
+          email: newSignup.email,
+          name: newSignup.name
+        }
+      });
+    }
     
   } catch (error) {
     console.error('Signup error:', error);
