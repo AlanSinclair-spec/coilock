@@ -1,6 +1,50 @@
 'use client';
 
+import { useState } from 'react';
+
 export default function Home() {
+  const [email, setEmail] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/early-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          company_name: companyName
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setMessage(data.message);
+        setEmail('');
+        setCompanyName('');
+      } else {
+        setIsSuccess(false);
+        setMessage(data.error || 'Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      setIsSuccess(false);
+      setMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-16">
@@ -13,18 +57,44 @@ export default function Home() {
             Stop audit risk at the source. No more chasing COIs.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-grow px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button 
-              className="bg-[#2563eb] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition-colors"
-            >
-              Get Early Access
-            </button>
-          </div>
+          <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-8">
+            <div className="flex flex-col gap-4">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                disabled={isLoading}
+                className="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              />
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="Company name (optional)"
+                disabled={isLoading}
+                className="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              />
+              <button 
+                type="submit"
+                disabled={isLoading || !email}
+                className="bg-[#2563eb] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Signing Up...' : 'Get Early Access'}
+              </button>
+            </div>
+          </form>
+
+          {message && (
+            <div className={`p-4 rounded-md mb-8 ${
+              isSuccess 
+                ? 'bg-green-50 text-green-800 border border-green-200' 
+                : 'bg-red-50 text-red-800 border border-red-200'
+            }`}>
+              {message}
+            </div>
+          )}
 
           {/* Social Proof Section */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
