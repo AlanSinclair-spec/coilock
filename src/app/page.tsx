@@ -19,6 +19,17 @@ export default function Home() {
   // A/B testing for pricing
   // Track which version converts better
   const [version, setVersion] = useState<'A' | 'B'>('B');
+  const [costCalculator, setCostCalculator] = useState({
+    monthlyInstalls: '',
+    callbacks: '',
+    hours: ''
+  });
+  const [calculatorResults, setCalculatorResults] = useState<{
+    callbackCost: number;
+    timeCost: number;
+    annualLoss: number;
+    savings: number;
+  } | null>(null);
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -101,6 +112,38 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const calculateCosts = () => {
+    if (!costCalculator.monthlyInstalls || !costCalculator.callbacks || !costCalculator.hours) return;
+
+    const installsMap = { '1-10': 5, '11-25': 18, '26-50': 38, '50+': 75 };
+    const callbacksMap = { '0-2': 1, '3-5': 4, '6-10': 8, '10+': 15 };
+    const hoursMap = { '<1 hour': 0.5, '1-2 hours': 1.5, '2-4 hours': 3, '4+ hours': 5 };
+
+    const installs = installsMap[costCalculator.monthlyInstalls as keyof typeof installsMap];
+    const callbacks = callbacksMap[costCalculator.callbacks as keyof typeof callbacksMap];
+    const hours = hoursMap[costCalculator.hours as keyof typeof hoursMap];
+
+    const callbackCost = callbacks * 2847;
+    const timeCost = hours * 75 * installs;
+    const annualLoss = (callbackCost + timeCost) * 12;
+    const savings = annualLoss - 1164; // COILock annual cost ($97 * 12)
+
+    setCalculatorResults({
+      callbackCost,
+      timeCost,
+      annualLoss,
+      savings
+    });
+
+    trackEvent('cost_calculator_used', {
+      monthlyInstalls: costCalculator.monthlyInstalls,
+      callbacks: costCalculator.callbacks,
+      hours: costCalculator.hours,
+      annualLoss,
+      savings
+    });
   };
 
   return (
@@ -320,9 +363,9 @@ export default function Home() {
                 </div>
               )}
               
-              <div className="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">
-                🚀 Now Accepting Founding Members
-              </div>
+              <div id="signup-form" className="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-red-100 text-red-800 mb-4">
+              ⚠️ Early Access - Limited Time
+            </div>
               <div className="text-sm text-blue-600 font-medium mb-4">
                 Avoid $2,847 callbacks - Join the contractors already saving thousands
               </div>
@@ -333,6 +376,180 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Hidden Callback Cost Calculator */}
+          <div className="mt-16 max-w-4xl mx-auto bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200 p-6 sm:p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">What's Your Hidden Callback Cost?</h2>
+              <p className="text-gray-600">Calculate how much CO interference callbacks are really costing your business</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Installs</label>
+                <select
+                  value={costCalculator.monthlyInstalls}
+                  onChange={(e) => setCostCalculator({...costCalculator, monthlyInstalls: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select range</option>
+                  <option value="1-10">1-10 installs</option>
+                  <option value="11-25">11-25 installs</option>
+                  <option value="26-50">26-50 installs</option>
+                  <option value="50+">50+ installs</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Average Callbacks Per Year</label>
+                <select
+                  value={costCalculator.callbacks}
+                  onChange={(e) => setCostCalculator({...costCalculator, callbacks: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select range</option>
+                  <option value="0-2">0-2 callbacks</option>
+                  <option value="3-5">3-5 callbacks</option>
+                  <option value="6-10">6-10 callbacks</option>
+                  <option value="10+">10+ callbacks</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Hours on Manual Calculations</label>
+                <select
+                  value={costCalculator.hours}
+                  onChange={(e) => setCostCalculator({...costCalculator, hours: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select range</option>
+                  <option value="<1 hour">&lt;1 hour per install</option>
+                  <option value="1-2 hours">1-2 hours per install</option>
+                  <option value="2-4 hours">2-4 hours per install</option>
+                  <option value="4+ hours">4+ hours per install</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="text-center mb-6">
+              <button
+                onClick={calculateCosts}
+                disabled={!costCalculator.monthlyInstalls || !costCalculator.callbacks || !costCalculator.hours}
+                className="bg-red-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-red-700 hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed transition-all duration-200"
+              >
+                Calculate My Costs
+              </button>
+            </div>
+
+            {calculatorResults && (
+              <div className="bg-white rounded-lg p-6 border border-red-300 animate-fade-in-up">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Your Annual Cost Breakdown</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  <div className="text-center p-4 bg-red-50 rounded-lg">
+                    <div className="text-2xl font-bold text-red-600">${calculatorResults.callbackCost.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">Estimated callback cost</div>
+                  </div>
+                  <div className="text-center p-4 bg-orange-50 rounded-lg">
+                    <div className="text-2xl font-bold text-orange-600">${calculatorResults.timeCost.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">Time cost monthly</div>
+                  </div>
+                  <div className="text-center p-4 bg-red-100 rounded-lg sm:col-span-2">
+                    <div className="text-3xl font-bold text-red-700">${calculatorResults.annualLoss.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">Annual loss</div>
+                  </div>
+                  <div className="text-center p-4 bg-green-100 rounded-lg sm:col-span-2">
+                    <div className="text-3xl font-bold text-green-700">${calculatorResults.savings.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">Savings with COILock</div>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <p className="text-gray-700 mb-4">
+                    <strong>COILock helps prevent these losses for just $47/month (founding members)</strong>
+                  </p>
+                  <button
+                    onClick={() => {
+                      document.getElementById('signup-form')?.scrollIntoView({ behavior: 'smooth' });
+                      trackEvent('cta_click', { location: 'cost_calculator', button_text: 'become_founding_member' });
+                    }}
+                    className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    Become a Founding Member
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Founding Member Benefits */}
+          <div className="mt-16 max-w-4xl mx-auto bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6 sm:p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Founding Member Benefits</h2>
+              <p className="text-gray-600">Join the exclusive group shaping COILock's future</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">50% off for 6 months ($300 savings)</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Vote on every new feature</span>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Priority support</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Early access to new features</span>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Lock in founding member rate</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  document.getElementById('signup-form')?.scrollIntoView({ behavior: 'smooth' });
+                  trackEvent('cta_click', { location: 'founding_member_benefits', button_text: 'claim_founding_member_pricing' });
+                }}
+                className="bg-blue-600 text-white px-8 py-4 rounded-md text-lg font-semibold hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Claim Founding Member Pricing
+              </button>
+            </div>
+          </div>
 
           {/* Social Proof Section */}
           <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 px-4">
