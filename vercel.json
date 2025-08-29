@@ -1,0 +1,17 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://tgarprtlweeuhmkctzjs.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnYXJwcnRsd2VldWhta2N0empzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMjkzMTgsImV4cCI6MjA3MTkwNTMxOH0.uh-GkvjFR_Q_XNWAcUlGiJyjl6k0iYNt8Df9vo1XNRk",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnYXJwcnRsd2VldWhta2N0empzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjMyOTMxOCwiZXhwIjoyMDcxOTA1MzE4fQ.FI7gQJXCv9h4ymTcuLZrnfIucf7LQ4wmIAoikIQk060"
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
