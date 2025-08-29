@@ -1,8 +1,12 @@
 -- Create early_access table for email collection
 CREATE TABLE IF NOT EXISTS early_access (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  company_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
-  company_name VARCHAR(255),
+  phone VARCHAR(50),
+  monthly_installs VARCHAR(20),
+  ab_test_version VARCHAR(10),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -10,16 +14,8 @@ CREATE TABLE IF NOT EXISTS early_access (
 CREATE INDEX IF NOT EXISTS idx_early_access_email ON early_access(email);
 CREATE INDEX IF NOT EXISTS idx_early_access_created_at ON early_access(created_at);
 
--- Enable Row Level Security
-ALTER TABLE early_access ENABLE ROW LEVEL SECURITY;
-
--- Create policy to allow inserts (for signups)
-CREATE POLICY "Allow public inserts" ON early_access
-  FOR INSERT WITH CHECK (true);
-
--- Create policy to allow service role to read all (for admin access)
-CREATE POLICY "Allow service role to read all" ON early_access
-  FOR SELECT USING (auth.role() = 'service_role');
+-- Disable Row Level Security for now to allow inserts
+ALTER TABLE early_access DISABLE ROW LEVEL SECURITY;
 
 -- Optional: Create analytics_events table if it doesn't exist
 CREATE TABLE IF NOT EXISTS analytics_events (

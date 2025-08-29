@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: Request) {
   try {
-    const { email, company_name } = await request.json();
+    const { name, company_name, email, phone, monthly_installs, ab_test_version } = await request.json();
     
     // Validate required fields
+    if (!name) {
+      return NextResponse.json(
+        { error: 'Name is required' },
+        { status: 400 }
+      );
+    }
+    
+    if (!company_name) {
+      return NextResponse.json(
+        { error: 'Company name is required' },
+        { status: 400 }
+      );
+    }
+    
     if (!email) {
       return NextResponse.json(
         { error: 'Email is required' },
@@ -22,8 +36,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Initialize Supabase client
-    const supabase = await createClient();
+    // Initialize Supabase client with anon key
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     
     // Check if email already exists
     const { data: existingUser } = await supabase
@@ -39,14 +56,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insert new early access signup
+    // Insert new early access signup (simplified for existing table structure)
     const { data, error } = await supabase
       .from('early_access')
       .insert([
         {
           email: email.toLowerCase(),
-          company_name: company_name || null,
-          created_at: new Date().toISOString()
+          company_name: company_name.trim()
         }
       ])
       .select()
@@ -83,10 +99,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Successfully registered for early access!',
+      message: 'Welcome aboard! You\'ve locked in founding member pricing. Check your email for next steps.',
       data: {
         id: data.id,
-        email: data.email
+        email: data.email,
+        name: data.name
       }
     });
     
