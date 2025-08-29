@@ -58,7 +58,7 @@ export default function Home() {
           </p>
           
           <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-8">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <input
                 type="email"
                 value={email}
@@ -66,23 +66,27 @@ export default function Home() {
                 placeholder="Enter your email"
                 required
                 disabled={isLoading}
-                className="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="flex-grow px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-gray-900 placeholder-gray-500"
               />
+              <button 
+                type="submit"
+                disabled={isLoading || !email}
+                className="bg-[#2563eb] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                {isLoading ? 'Signing Up...' : 'Get Early Access'}
+              </button>
+            </div>
+            
+            {/* Company name field below */}
+            <div className="mt-4">
               <input
                 type="text"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder="Company name (optional)"
                 disabled={isLoading}
-                className="px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-gray-900 placeholder-gray-500"
               />
-              <button 
-                type="submit"
-                disabled={isLoading || !email}
-                className="bg-[#2563eb] text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Signing Up...' : 'Get Early Access'}
-              </button>
             </div>
           </form>
 
