@@ -215,7 +215,7 @@ export default function StatusPage() {
               Experiencing issues? Contact our support team.
             </p>
             <a
-              href="mailto:hello@coilock.com"
+              href="mailto:menjivarw818@gmail.com"
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
             >
               Contact Support

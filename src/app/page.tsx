@@ -92,7 +92,7 @@ export default function Home() {
       }
     } catch (error) {
       setIsSuccess(false);
-      const fallbackMessage = 'Network error. Please email us at hello@coilock.com or try again.';
+      const fallbackMessage = 'Network error. Please email us at menjivarw818@gmail.com or try again.';
       setMessage(fallbackMessage);
       
       trackEvent('form_submit_network_error', {
@@ -407,11 +407,11 @@ export default function Home() {
               <div className="space-y-2">
                 <p className="text-gray-600">Questions? Email:</p>
                 <a 
-                  href="mailto:hello@coilock.com" 
+                  href="mailto:menjivarw818@gmail.com" 
                   className="block text-blue-600 hover:text-blue-700 transition-colors font-medium"
                   onClick={() => trackEvent('contact_click', { method: 'email' })}
                 >
-                  hello@coilock.com
+                  menjivarw818@gmail.com
                 </a>
               </div>
             </div>
