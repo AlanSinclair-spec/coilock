@@ -115,7 +115,7 @@ export default function Home() {
             Professional CO Compliance System - 70% Less Than ServiceTitan
           </p>
           <p className="text-base sm:text-lg text-blue-600 font-semibold mb-6 sm:mb-8 px-4">
-            Early Access Now Available - Founding Member Pricing
+            Get 50% off for your first 6 months as a founding member
           </p>
 
           {/* Credibility markers */}
@@ -217,8 +217,12 @@ export default function Home() {
               className="w-full bg-blue-600 text-white px-6 py-4 rounded-md text-base sm:text-lg font-semibold hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none transition-all duration-200 min-h-[44px]"
               onClick={() => trackEvent('cta_click', { location: 'hero_form', button_text: 'become_founding_member' })}
             >
-              {isLoading ? 'Joining...' : 'Become a Founding Member - $47/month'}
+              {isLoading ? 'Joining...' : 'Become a Founding Member - $47/month for 6 months, then $97/month'}
             </button>
+            
+            <div className="text-center mt-3">
+              <p className="text-sm text-green-600 font-medium">Save $300 in your first 6 months</p>
+            </div>
             
             <p className="text-sm sm:text-xs text-gray-500 mt-3 text-center">* Required fields</p>
           </form>
@@ -278,8 +282,8 @@ export default function Home() {
                     <tr className="bg-blue-50">
                       <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-blue-900">COILock Professional</td>
                       <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-blue-900">
-                        <span className="line-through text-gray-400">$97/month</span>
-                        <span className="ml-2 font-bold text-green-600">$47/month (beta)</span>
+                        <div>$97/month</div>
+                        <div className="text-xs text-green-600">(Founding members: $47/month for 6 months)</div>
                       </td>
                       <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-green-600 font-medium">Prevents $2,847 callbacks</td>
                     </tr>
@@ -294,30 +298,37 @@ export default function Home() {
             <div className="text-center">
               <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">🔥 Founding Member Pricing</div>
               
-              {/* Version B: $97 with $47 beta discount */}
+              {/* Version B: $97 with $47 founding member discount */}
               {version === 'B' && (
                 <div className="mb-4">
-                  <div className="text-sm text-gray-500 mb-2">Regular Price: $97/month | Beta Price: $47/month (50% off forever)</div>
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-400 line-through mb-2">$97/month</div>
-                  <div className="text-sm text-green-600 font-medium mb-2">Founding Member Discount: 50% OFF Forever</div>
-                  <div className="text-3xl sm:text-4xl font-bold text-green-600 mb-2">$47/month</div>
-                  <div className="text-sm text-gray-600">Lock in this price forever as a founding member</div>
+                  <div className="text-sm text-gray-500 mb-2">Regular Price: $97/month</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">$97/month</div>
+                  <div className="text-sm text-green-600 font-medium mb-2">Founding Member Special: 50% OFF First 6 Months</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-green-600 mb-2">$47/month for 6 months, then $97/month</div>
+                  <div className="text-sm text-blue-600 font-medium">Save $300 in your first 6 months</div>
                 </div>
               )}
               
-              {/* Version A: Original $47 pricing */}
+              {/* Version A: Updated founding member pricing */}
               {version === 'A' && (
                 <div className="mb-4">
-                  <div className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">$47/month</div>
-                  <div className="text-sm text-gray-600">Special founding member pricing</div>
+                  <div className="text-sm text-gray-500 mb-2">Regular Price: $97/month</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">$97/month</div>
+                  <div className="text-sm text-green-600 font-medium mb-2">Founding Member Special: 50% OFF First 6 Months</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-green-600 mb-2">$47/month for 6 months, then $97/month</div>
+                  <div className="text-sm text-blue-600 font-medium">Save $300 in your first 6 months</div>
                 </div>
               )}
               
               <div className="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">
                 🚀 Now Accepting Founding Members
               </div>
-              <div className="text-sm text-blue-600 font-medium">
+              <div className="text-sm text-blue-600 font-medium mb-4">
                 Avoid $2,847 callbacks - Join the contractors already saving thousands
+              </div>
+              
+              <div className="bg-blue-100 p-4 rounded-lg text-sm text-blue-800">
+                <strong>As a founding member, you save $300 over your first 6 months while helping us perfect COILock for the HVAC industry</strong>
               </div>
             </div>
           </div>
@@ -344,6 +355,16 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
             
             <div className="space-y-6">
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">What's the pricing structure?</h3>
+                <p className="text-gray-600">
+                  <strong>Standard price:</strong> $97/month<br/>
+                  <strong>Founding member deal:</strong> $47/month for first 6 months<br/>
+                  <strong>After 6 months:</strong> Automatically becomes $97/month<br/>
+                  No long-term contracts, cancel anytime. Save $300 in your first 6 months.
+                </p>
+              </div>
+              
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How does this save me money?</h3>
                 <p className="text-gray-600">
