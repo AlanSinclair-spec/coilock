@@ -330,8 +330,8 @@ export default function Home() {
               <p className="mt-2 text-base sm:text-sm text-gray-600">Average cost per CO callback</p>
             </div>
             <div className="p-6 bg-gray-50 rounded-lg text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600">98.7%</div>
-              <p className="mt-2 text-base sm:text-sm text-gray-600">Load calculation accuracy</p>
+              <div className="text-2xl sm:text-3xl font-bold text-green-600">ACCA</div>
+              <p className="mt-2 text-base sm:text-sm text-gray-600">Manual J compliant</p>
             </div>
             <div className="p-6 bg-gray-50 rounded-lg text-center">
               <div className="text-2xl sm:text-3xl font-bold text-purple-600">ACCA</div>
@@ -348,14 +348,14 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How does this save me money?</h3>
                 <p className="text-gray-600">
                   Eliminates costly callbacks from CO interference issues that can cost $500-2000 per incident. 
-                  Prevents oversized equipment purchases and reduces installation time by 75% with accurate calculations.
+                  Prevents oversized equipment purchases and reduces installation time significantly with accurate calculations.
                 </p>
               </div>
               
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">How accurate are the calculations?</h3>
                 <p className="text-gray-600">
-                  98.7% accuracy based on ACCA Manual J standards with real-world validation from 500+ installations. 
+                  Built according to ACCA Manual J standards. 
                   Accounts for CO interference patterns, local climate data, and equipment specifications automatically.
                 </p>
               </div>
@@ -363,7 +363,7 @@ export default function Home() {
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Why is this better than manual calculations?</h3>
                 <p className="text-gray-600">
-                  Manual calculations take 45+ minutes and miss critical CO interference factors 60% of the time. 
+                  Manual calculations take 45+ minutes and often miss critical CO interference factors. 
                   Our automated system completes calculations in 2 minutes with built-in CO detection algorithms.
                 </p>
               </div>
